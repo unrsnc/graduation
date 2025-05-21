@@ -237,9 +237,6 @@ body.dark-mode footer {
 }
 
 #darkModeToggle {
-    position: fixed;
-    top: 70px;
-    right: 24px;
     z-index: 1002;
     background: #fff;
     color: #23272f;
@@ -261,15 +258,13 @@ body.dark-mode #darkModeToggle {
 }
 
 .button-group {
-    position: fixed;
-    top: 90px;
-    right: 24px;
-    z-index: 1002;
     display: flex;
-    flex-direction: column;
-    gap: 16px; /* lebih renggang antar tombol */
-    align-items: flex-end;
-    background: transparent;
+    flex-direction: column; /* ubah ke kolom */
+    justify-content: center;
+    align-items: center;
+    gap: 12px; /* jarak antar tombol */
+    margin: 18px 0 24px 0;
+    position: static;
 }
 
 .header-decor {
@@ -283,12 +278,12 @@ body.dark-mode #darkModeToggle {
 }
 
 .header-decor.left {
-    left: 400px;        /* lebih ke dalam, mendekati foto profil */
+    left: 450px;        /* lebih ke dalam, mendekati foto profil */
     animation-delay: 0s;
 }
 
 .header-decor.right {
-    right: 400px;       /* lebih ke dalam, mendekati foto profil */
+    right: 450px;       /* lebih ke dalam, mendekati foto profil */
     animation-delay: 1.5s;
 }
 
@@ -334,5 +329,17 @@ body.dark-mode #darkModeToggle {
     #playMusic {
         font-size: 0.95em;
         padding: 6px 12px;
+    }
+    .modal {
+        padding-top: 20px;
+    }
+    .modal-content {
+        max-width: 98vw;
+        max-height: 70vh;
+    }
+    .close {
+        top: 10px;
+        right: 16px;
+        font-size: 32px;
     }
 }
