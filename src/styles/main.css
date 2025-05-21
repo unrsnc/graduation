@@ -1,0 +1,316 @@
+body {
+    font-family: cursive;
+    background: #eaf6fb; /* biru pastel lembut */
+    color: #444;
+    margin: 0;
+    padding: 0;
+}
+
+body.dark-mode {
+    background: #23272f;
+    color: #e0e0e0;
+}
+
+header {
+    background: #b8e0ff;
+    color: #2d3a4b;
+    padding: 1.2rem 0 1.5rem 0; /* padding atas lebih kecil, bawah lebih besar */
+    text-align: center;
+    box-shadow: 0 4px 16px #e3f2fd;
+    border-radius: 0 0 32px 32px; /* sudut bawah membulat */
+    margin-bottom: 1.5rem;
+    position: relative;
+}
+
+body.dark-mode header {
+    background: #2d3748;
+    color: #e0e0e0;
+    box-shadow: 0 2px 8px #23272f;
+}
+
+header h2 {
+    opacity: 0;
+    animation: fadeIn 2s ease-in-out forwards;
+    animation-delay: 1.2s;
+}
+
+h1 {
+    font-size: 2.5em;
+    margin: 0;
+    opacity: 0;
+    animation: fadeIn 2s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+h2 {
+    font-size: 2em;
+    margin: 20px 0;
+}
+
+main {
+    max-width: 800px;
+    margin: 2rem auto;
+    background: #ffffffcc;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px #e0e7ef;
+    padding: 2rem;
+}
+
+body.dark-mode main {
+    background: #23272fcc;
+    box-shadow: 0 4px 16px #1118;
+}
+
+section#messages {
+    background: #ffe0f7;
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 8px #f8bbd0;
+}
+
+body.dark-mode section#messages {
+    background: #3a3147;
+    box-shadow: 0 2px 8px #6d4c8b;
+}
+
+#messages p {
+    opacity: 0;
+    transform: translateY(40px);
+    transition: opacity 0.8s ease, transform 0.8s cubic-bezier(.23,1.02,.67,1.01);
+}
+
+#messages p.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+section#gallery {
+    background: #a3ecf3;
+    border-radius: 12px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 8px #b2f2bb;
+    text-align: center;
+}
+
+body.dark-mode #gallery {
+    background: #2d3748;
+    box-shadow: 0 2px 8px #23272f;
+}
+
+section#gallery img {
+    width: 180px;
+    margin: 0.5rem;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px #b2f2bb;
+    background: #fff;
+}
+
+footer {
+    background: #b8e0ff;
+    color: #2d3a4b;
+    text-align: center;
+    padding: 1rem 0;
+    margin-top: 2rem;
+    border-top-left-radius: 16px;
+    border-top-right-radius: 16px;
+    box-shadow: 0 -2px 8px #e3f2fd;
+}
+
+body.dark-mode footer {
+    background: #2d3748;
+    color: #e0e0e0;
+    box-shadow: 0 -2px 8px #23272f;
+}
+
+.marquee {
+    width: 100%;
+    overflow: hidden;
+    background: #ffe0f7;
+    color: #a64ca6;
+    font-size: 1.3em;
+    padding: 0.6em 0 0.6em 0; /* padding atas & bawah lebih soft */
+    box-shadow: 0 2px 8px #f8bbd0;
+    position: relative;
+}
+
+.marquee span {
+    display: inline-block;
+    white-space: nowrap;
+    animation: marquee 20s linear infinite;
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+@keyframes marquee {
+    0%   { transform: translateX(100%);}
+    100% { transform: translateX(-100%);}
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    padding-top: 60px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background: rgba(0,0,0,0.7);
+}
+
+.modal-content {
+    margin: auto;
+    display: block;
+    max-width: 80vw;
+    max-height: 80vh;
+    border-radius: 12px;
+    box-shadow: 0 4px 16px #3338;
+}
+
+.close {
+    position: absolute;
+    top: 30px;
+    right: 40px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.2s;
+    z-index: 1001;
+}
+.close:hover {
+    color: #ffb8d2;
+}
+
+#caption {
+    text-align: center;
+    color: #fff;
+    padding: 10px 0;
+    font-size: 1.1em;
+}
+
+.flower-container {
+    pointer-events: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 0;
+    z-index: 10;
+}
+
+.flower {
+    position: absolute;
+    top: -60px;
+    width: 40px;
+    height: 40px;
+    opacity: 0.85;
+    pointer-events: none;
+    animation: flower-fall linear forwards;
+}
+
+@keyframes flower-fall {
+    to {
+        transform: translateY(120vh) rotate(360deg);
+        opacity: 0.7;
+    }
+}
+
+.profile-img {
+    width: 170px;
+    height: 170px;
+    object-fit: cover;
+    object-position: center 33%; /* gambar agak turun ke bawah */
+    border-radius: 60%;
+    border: 2px solid #fff; /* garis tepi lebih tipis */
+    box-shadow: 0 2px 12px #b8e0ff;
+    margin: 18px auto 10px auto;
+    display: block;
+    background: #e0f7fa;
+    padding: 4px; /* padding atas diperbesar */
+}
+
+#darkModeToggle {
+    position: fixed;
+    top: 70px;
+    right: 24px;
+    z-index: 1002;
+    background: #fff;
+    color: #23272f;
+    border: none;
+    border-radius: 14px;
+    padding: 3px 10px;
+    font-size: 0.78em;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #b8e0ff;
+    transition: background 0.3s, color 0.3s;
+    letter-spacing: 0.5px;
+}
+
+body.dark-mode #darkModeToggle {
+    background: #23272f;
+    color: #fff;
+    box-shadow: 0 2px 8px #1118;
+}
+
+.button-group {
+    position: fixed;
+    top: 90px;
+    right: 24px;
+    z-index: 1002;
+    display: flex;
+    flex-direction: column;
+    gap: 16px; /* lebih renggang antar tombol */
+    align-items: flex-end;
+    background: transparent;
+}
+
+.header-decor {
+    position: absolute;
+    top: 120px;         /* tetap lebih ke bawah */
+    font-size: 3.5em;  /* lebih besar dari sebelumnya */
+    user-select: none;
+    pointer-events: none;
+    opacity: 0.85;
+    animation: float-ballon 3s ease-in-out infinite alternate;
+}
+
+.header-decor.left {
+    left: 400px;        /* lebih ke dalam, mendekati foto profil */
+    animation-delay: 0s;
+}
+
+.header-decor.right {
+    right: 400px;       /* lebih ke dalam, mendekati foto profil */
+    animation-delay: 1.5s;
+}
+
+@keyframes float-ballon {
+    0% { transform: translateY(0) scale(1);}
+    100% { transform: translateY(-18px) scale(1.08);}
+}
+
+#playMusic {
+    background: #ffe0f7;
+    color: #a64ca6;
+    border: none;
+    border-radius: 14px;
+    padding: 4px 14px;
+    font-size: 0.85em;
+    font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
+    cursor: pointer;
+    box-shadow: 0 2px 8px #f8bbd0;
+    transition: background 0.3s, color 0.3s;
+    letter-spacing: 0.5px;
+}
+#playMusic:hover {
+    background: #f8bbd0;
+    color: #fff;
+}
