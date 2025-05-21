@@ -314,3 +314,25 @@ body.dark-mode #darkModeToggle {
     background: #f8bbd0;
     color: #fff;
 }
+
+/* Responsive adjustments for mobile */
+@media (max-width: 600px) {
+    .header-decor.left {
+        left: 24px;
+        font-size: 2em;
+    }
+    .header-decor.right {
+        right: 24px;
+        font-size: 2em;
+    }
+    .button-group {
+        top: 70px;
+        right: 8px;
+        gap: 10px;
+    }
+    #darkModeToggle,
+    #playMusic {
+        font-size: 0.95em;
+        padding: 6px 12px;
+    }
+}
