@@ -154,10 +154,10 @@ document.addEventListener('DOMContentLoaded', () => {
         function updateButtonState() {
             if (isPlaying) {
                 musicToggleBtn.classList.add('playing');
-                musicIcon.textContent = '⏸️';
+                //musicIcon.textContent = '⏸️';
             } else {
                 musicToggleBtn.classList.remove('playing');
-                musicIcon.textContent = '▶️';
+               // musicIcon.textContent = '▶️';
             }
         }
         

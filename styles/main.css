@@ -220,7 +220,7 @@ body.dark-mode footer {
     left: 0;
     width: 100vw;
     height: 0;
-    z-index: 10;
+    z-index: 200;
 }
 
 .flower {
@@ -493,8 +493,8 @@ body.dark-mode .dark-mode-toggle-switch .toggle-inner {
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 1.2rem 0;
-    background: rgba(255, 255, 255, 0.3);
+    padding: 0;
+    background: #b8e0ff;
     backdrop-filter: blur(10px);
     margin: 0;
     position: relative;
@@ -505,7 +505,7 @@ body.dark-mode .dark-mode-toggle-switch .toggle-inner {
     width: 60px;
     height: 60px;
     border: none;
-    border-radius: 50%;
+    border-radius: 100%;
     background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(184, 224, 255, 0.6) 100%);
     backdrop-filter: blur(12px);
     border: 1px solid rgba(255, 255, 255, 0.8);
@@ -561,6 +561,34 @@ body.dark-mode .dark-mode-toggle-switch .toggle-inner {
     pointer-events: none;
 }
 
+/* SVG icon color */
+.music-icon svg {
+    display: block;
+    color: #5aabff;
+    transition: color 0.3s ease;
+}
+
+/* Default: tampilkan play, sembunyikan pause */
+.music-icon .icon-pause {
+    display: none;
+}
+.music-icon .icon-play {
+    display: block;
+}
+
+/* Saat playing: tampilkan pause, sembunyikan play */
+.music-toggle-btn.playing .music-icon .icon-pause {
+    display: block;
+}
+.music-toggle-btn.playing .music-icon .icon-play {
+    display: none;
+}
+
+/* Warna icon saat playing (pink/putih) */
+.music-toggle-btn.playing .music-icon svg {
+    color: #fff;
+}
+
 @keyframes pulse-ring {
     0% {
         width: 100%;
@@ -590,7 +618,7 @@ body.dark-mode .dark-mode-toggle-switch .toggle-inner {
 
 /* Dark mode styling */
 body.dark-mode .music-control-container {
-    background:#23272f;
+    background:#2d3748;
     backdrop-filter: blur(10px);
 }
 
