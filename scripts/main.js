@@ -115,132 +115,140 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // ============================================================
-    // AUTOPLAY MUSIC WITH MOBILE BROWSER COMPATIBILITY
+    // MOBILE-OPTIMIZED AUTOPLAY AUDIO SYSTEM
     // ============================================================
     const bgAudio = document.getElementById('bg-audio');
     if (bgAudio) {
-        const FADE_DURATION = 1800; // 1.8 seconds for smooth fade-in
-        const DEFAULT_VOLUME = 0.50; // 50% default volume
-        let hasAudioStarted = false; // Flag to prevent spam play()
-        let fadeInAnimationId = null; // Track fade-in animation
+        const FADE_DURATION = 1500; // 1.5 seconds smooth fade
+        const DEFAULT_VOLUME = 0.35; // 35% default volume
+        let audioInitialized = false;
+        let userHasInteracted = false;
+        let fadeInAnimationId = null;
+        
+        // Ensure proper audio attributes
+        bgAudio.preload = 'auto';
+        bgAudio.autoplay = false; // We'll handle this manually
         
         /**
-         * Fade in audio volume smoothly using requestAnimationFrame
-         * @param {HTMLAudioElement} audio - The audio element
-         * @param {number} targetVolume - Target volume (0-1)
-         * @param {number} duration - Duration in milliseconds
+         * Smooth volume fade-in using requestAnimationFrame
          */
-        function fadeInVolume(audio, targetVolume, duration) {
-            // Clear any existing fade animation
-            if (fadeInAnimationId) {
-                cancelAnimationFrame(fadeInAnimationId);
-            }
+        function fadeInAudio(targetVolume) {
+            if (fadeInAnimationId) cancelAnimationFrame(fadeInAnimationId);
             
             const startTime = performance.now();
-            audio.volume = 0; // Start from silence
+            bgAudio.volume = 0;
             
             function animate(currentTime) {
-                const elapsedTime = currentTime - startTime;
-                const progress = Math.min(elapsedTime / duration, 1);
-                audio.volume = progress * targetVolume;
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / FADE_DURATION, 1);
+                bgAudio.volume = progress * targetVolume;
                 
                 if (progress < 1) {
                     fadeInAnimationId = requestAnimationFrame(animate);
-                } else {
-                    fadeInAnimationId = null;
-                    audio.volume = targetVolume;
                 }
             }
-            
             fadeInAnimationId = requestAnimationFrame(animate);
         }
         
         /**
-         * Attempt to autoplay audio
+         * Try muted autoplay first (most mobile browsers allow this)
          */
-        function attemptAutoplay() {
-            if (hasAudioStarted) return;
+        function tryMutedAutoplay() {
+            if (audioInitialized) return;
             
-            bgAudio.muted = false;
+            bgAudio.muted = true;
             bgAudio.volume = 0;
             
             const playPromise = bgAudio.play();
-            
             if (playPromise !== undefined) {
                 playPromise
                     .then(() => {
-                        // Autoplay successful
-                        hasAudioStarted = true;
-                        fadeInVolume(bgAudio, DEFAULT_VOLUME, FADE_DURATION);
+                        audioInitialized = true;
+                        // Unmute on first user interaction
+                        if (!userHasInteracted) {
+                            setupInteractionUnmute();
+                        }
                     })
                     .catch(() => {
-                        // Autoplay blocked - set up fallback on user interaction
-                        setupFallbackInteraction();
+                        // Muted autoplay also failed, setup full fallback
+                        setupInteractionUnmute();
                     });
-            } else {
-                // Older browser without Promise support
-                setupFallbackInteraction();
             }
         }
         
         /**
-         * Setup fallback: play audio on first user interaction
-         * Handles click, tap, and scroll events for maximum compatibility
+         * Setup unmute and fade-in on first user interaction
          */
-        function setupFallbackInteraction() {
-            const interactionHandler = () => {
-                if (hasAudioStarted) return;
+        function setupInteractionUnmute() {
+            const unmute = () => {
+                if (userHasInteracted) return;
+                userHasInteracted = true;
                 
                 bgAudio.muted = false;
                 bgAudio.volume = 0;
                 
-                bgAudio.play()
-                    .then(() => {
-                        hasAudioStarted = true;
-                        fadeInVolume(bgAudio, DEFAULT_VOLUME, FADE_DURATION);
-                    })
-                    .catch(err => {
-                        // If still fails, try unmuted approach
-                        console.warn('Audio autoplay fallback failed:', err);
+                // Try to play if not already playing
+                if (bgAudio.paused) {
+                    bgAudio.play().catch(err => {
+                        console.warn('Audio play failed:', err);
                     });
+                }
                 
-                // Remove listeners after first interaction
-                document.removeEventListener('click', interactionHandler);
-                document.removeEventListener('touchstart', interactionHandler);
-                document.removeEventListener('scroll', interactionHandler);
+                fadeInAudio(DEFAULT_VOLUME);
+                
+                // Clean up listeners
+                ['click', 'touchstart', 'scroll', 'keydown', 'pointerdown'].forEach(event => {
+                    document.removeEventListener(event, unmute);
+                });
             };
             
-            // Multiple interaction triggers for better mobile compatibility
-            document.addEventListener('click', interactionHandler, { once: false });
-            document.addEventListener('touchstart', interactionHandler, { once: false });
-            document.addEventListener('scroll', interactionHandler, { once: false });
+            // Multiple event types for better mobile coverage
+            ['click', 'touchstart', 'scroll', 'keydown', 'pointerdown'].forEach(event => {
+                document.addEventListener(event, unmute, { passive: true });
+            });
         }
         
         /**
-         * Detect page visibility and resume audio if needed
-         * Handles tab switching and app backgrounding scenarios
+         * Resume audio when page becomes visible again
          */
         document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible' && hasAudioStarted && bgAudio.paused) {
-                bgAudio.play().catch(() => {
-                    console.warn('Could not resume audio on visibility change');
-                });
+            if (document.visibilityState === 'visible' && audioInitialized && bgAudio.paused) {
+                bgAudio.play().catch(() => {});
             }
         });
         
         /**
-         * Initialize autoplay with proper timing for page load completion
-         * Wait for DOM to be fully ready and images to load
+         * Handle audio errors gracefully
          */
+        bgAudio.addEventListener('error', () => {
+            console.warn('Audio element error - may be unsupported format');
+        });
+        
+        /**
+         * Initialize on page load
+         */
+        const initAudio = () => {
+            // Delay slightly to ensure audio element is fully ready
+            setTimeout(() => {
+                tryMutedAutoplay();
+                // Also setup interaction just in case
+                if (!audioInitialized) {
+                    setupInteractionUnmute();
+                }
+            }, 500);
+        };
+        
         if (document.readyState === 'loading') {
-            // DOM still loading
-            document.addEventListener('DOMContentLoaded', () => {
-                // Give browser a bit more time to settle
-                setTimeout(attemptAutoplay, 1500);
-            });
+            document.addEventListener('DOMContentLoaded', initAudio);
         } else {
-            // DOM already loaded
-            setTimeout(attemptAutoplay, 1500);
+            initAudio();
         }
+        
+        // Also initialize on window load for extra safety
+        window.addEventListener('load', () => {
+            if (!audioInitialized) {
+                setTimeout(tryMutedAutoplay, 300);
+            }
+        });
     }
 });
