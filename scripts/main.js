@@ -115,140 +115,93 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     
     // ============================================================
-    // MOBILE-OPTIMIZED AUTOPLAY AUDIO SYSTEM
+    // MODERN MUSIC PLAYER CONTROL - PLAY/PAUSE WITH BUTTON
     // ============================================================
     const bgAudio = document.getElementById('bg-audio');
-    if (bgAudio) {
-        const FADE_DURATION = 1500; // 1.5 seconds smooth fade
-        const DEFAULT_VOLUME = 0.35; // 35% default volume
-        let audioInitialized = false;
-        let userHasInteracted = false;
-        let fadeInAnimationId = null;
+    const musicToggleBtn = document.getElementById('musicToggleBtn');
+    const musicIcon = document.querySelector('.music-icon');
+    
+    if (bgAudio && musicToggleBtn) {
+        const DEFAULT_VOLUME = 0.50; // 50% default volume
+        let isPlaying = false;
         
-        // Ensure proper audio attributes
-        bgAudio.preload = 'auto';
-        bgAudio.autoplay = false; // We'll handle this manually
-        
-        /**
-         * Smooth volume fade-in using requestAnimationFrame
-         */
-        function fadeInAudio(targetVolume) {
-            if (fadeInAnimationId) cancelAnimationFrame(fadeInAnimationId);
-            
-            const startTime = performance.now();
-            bgAudio.volume = 0;
-            
-            function animate(currentTime) {
-                const elapsed = currentTime - startTime;
-                const progress = Math.min(elapsed / FADE_DURATION, 1);
-                bgAudio.volume = progress * targetVolume;
-                
-                if (progress < 1) {
-                    fadeInAnimationId = requestAnimationFrame(animate);
-                }
-            }
-            fadeInAnimationId = requestAnimationFrame(animate);
-        }
+        // Set default volume
+        bgAudio.volume = DEFAULT_VOLUME;
         
         /**
-         * Try muted autoplay first (most mobile browsers allow this)
+         * Toggle play/pause and update button state
          */
-        function tryMutedAutoplay() {
-            if (audioInitialized) return;
-            
-            bgAudio.muted = true;
-            bgAudio.volume = 0;
-            
-            const playPromise = bgAudio.play();
-            if (playPromise !== undefined) {
-                playPromise
+        function toggleMusic() {
+            if (bgAudio.paused) {
+                bgAudio.play()
                     .then(() => {
-                        audioInitialized = true;
-                        // Unmute on first user interaction
-                        if (!userHasInteracted) {
-                            setupInteractionUnmute();
-                        }
+                        isPlaying = true;
+                        updateButtonState();
                     })
-                    .catch(() => {
-                        // Muted autoplay also failed, setup full fallback
-                        setupInteractionUnmute();
+                    .catch(err => {
+                        console.warn('Failed to play audio:', err);
                     });
+            } else {
+                bgAudio.pause();
+                isPlaying = false;
+                updateButtonState();
             }
         }
         
         /**
-         * Setup unmute and fade-in on first user interaction
+         * Update button appearance based on play state
          */
-        function setupInteractionUnmute() {
-            const unmute = () => {
-                if (userHasInteracted) return;
-                userHasInteracted = true;
-                
-                bgAudio.muted = false;
-                bgAudio.volume = 0;
-                
-                // Try to play if not already playing
-                if (bgAudio.paused) {
-                    bgAudio.play().catch(err => {
-                        console.warn('Audio play failed:', err);
-                    });
-                }
-                
-                fadeInAudio(DEFAULT_VOLUME);
-                
-                // Clean up listeners
-                ['click', 'touchstart', 'scroll', 'keydown', 'pointerdown'].forEach(event => {
-                    document.removeEventListener(event, unmute);
-                });
-            };
-            
-            // Multiple event types for better mobile coverage
-            ['click', 'touchstart', 'scroll', 'keydown', 'pointerdown'].forEach(event => {
-                document.addEventListener(event, unmute, { passive: true });
-            });
+        function updateButtonState() {
+            if (isPlaying) {
+                musicToggleBtn.classList.add('playing');
+                musicIcon.textContent = '⏸️';
+            } else {
+                musicToggleBtn.classList.remove('playing');
+                musicIcon.textContent = '▶️';
+            }
         }
+        
+        /**
+         * Sync button state with audio element
+         */
+        bgAudio.addEventListener('play', () => {
+            isPlaying = true;
+            updateButtonState();
+        });
+        
+        bgAudio.addEventListener('pause', () => {
+            isPlaying = false;
+            updateButtonState();
+        });
+        
+        /**
+         * Button click handler
+         */
+        musicToggleBtn.addEventListener('click', toggleMusic);
+        
+        /**
+         * Keyboard shortcut (spacebar to toggle music)
+         */
+        document.addEventListener('keydown', (e) => {
+            // Only toggle if not typing in an input/textarea
+            if (e.code === 'Space' && !['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) {
+                e.preventDefault();
+                toggleMusic();
+            }
+        });
         
         /**
          * Resume audio when page becomes visible again
          */
         document.addEventListener('visibilitychange', () => {
-            if (document.visibilityState === 'visible' && audioInitialized && bgAudio.paused) {
+            if (document.visibilityState === 'visible' && isPlaying && bgAudio.paused) {
                 bgAudio.play().catch(() => {});
             }
         });
         
         /**
-         * Handle audio errors gracefully
+         * Initialize button state (paused by default)
          */
-        bgAudio.addEventListener('error', () => {
-            console.warn('Audio element error - may be unsupported format');
-        });
-        
-        /**
-         * Initialize on page load
-         */
-        const initAudio = () => {
-            // Delay slightly to ensure audio element is fully ready
-            setTimeout(() => {
-                tryMutedAutoplay();
-                // Also setup interaction just in case
-                if (!audioInitialized) {
-                    setupInteractionUnmute();
-                }
-            }, 500);
-        };
-        
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initAudio);
-        } else {
-            initAudio();
-        }
-        
-        // Also initialize on window load for extra safety
-        window.addEventListener('load', () => {
-            if (!audioInitialized) {
-                setTimeout(tryMutedAutoplay, 300);
-            }
-        });
+        updateButtonState();
     }
 });

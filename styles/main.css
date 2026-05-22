@@ -484,3 +484,156 @@ body.dark-mode .dark-mode-toggle-switch .toggle-inner {
         font-size: 32px;
     }
 }
+
+/* ============================================================
+   MODERN MUSIC CONTROL BUTTON - GLASSMORPHISM & PASTEL
+   ============================================================ */
+
+.music-control-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1.2rem 0;
+    background: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(10px);
+    margin: 0;
+    position: relative;
+    z-index: 50;
+}
+
+.music-toggle-btn {
+    width: 60px;
+    height: 60px;
+    border: none;
+    border-radius: 50%;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.7) 0%, rgba(184, 224, 255, 0.6) 100%);
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 15px rgba(184, 224, 255, 0.3),
+                inset 0 1px 4px rgba(255, 255, 255, 0.8);
+    cursor: pointer;
+    font-size: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+/* Hover state */
+.music-toggle-btn:hover {
+    transform: scale(1.15) translateY(-3px);
+    box-shadow: 0 8px 25px rgba(184, 224, 255, 0.5),
+                inset 0 1px 4px rgba(255, 255, 255, 0.9),
+                0 0 30px rgba(184, 224, 255, 0.4);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(184, 224, 255, 0.75) 100%);
+}
+
+/* Active/Playing state */
+.music-toggle-btn.playing {
+    background: linear-gradient(135deg, rgba(230, 126, 203, 0.7) 0%, rgba(255, 179, 211, 0.6) 100%);
+    box-shadow: 0 4px 15px rgba(230, 126, 203, 0.4),
+                inset 0 1px 4px rgba(255, 255, 255, 0.7),
+                0 0 20px rgba(230, 126, 203, 0.3);
+}
+
+.music-toggle-btn.playing:hover {
+    transform: scale(1.15) translateY(-3px);
+    box-shadow: 0 8px 25px rgba(230, 126, 203, 0.5),
+                inset 0 1px 4px rgba(255, 255, 255, 0.8),
+                0 0 30px rgba(230, 126, 203, 0.4);
+    background: linear-gradient(135deg, rgba(230, 126, 203, 0.85) 0%, rgba(255, 179, 211, 0.75) 100%);
+}
+
+/* Pulse animation when playing */
+.music-toggle-btn.playing::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    border: 2px solid rgba(230, 126, 203, 0.6);
+    transform: translate(-50%, -50%);
+    animation: pulse-ring 1.5s ease-out infinite;
+    pointer-events: none;
+}
+
+@keyframes pulse-ring {
+    0% {
+        width: 100%;
+        height: 100%;
+        opacity: 1;
+    }
+    100% {
+        width: 160%;
+        height: 160%;
+        opacity: 0;
+    }
+}
+
+/* Subtle bounce animation for icon */
+.music-toggle-btn.playing .music-icon {
+    animation: subtle-bounce 1.2s ease-in-out infinite;
+}
+
+@keyframes subtle-bounce {
+    0%, 100% {
+        transform: translateY(0) scale(1);
+    }
+    50% {
+        transform: translateY(-4px) scale(1.05);
+    }
+}
+
+/* Dark mode styling */
+body.dark-mode .music-control-container {
+    background:#23272f;
+    backdrop-filter: blur(10px);
+}
+
+body.dark-mode .music-toggle-btn {
+    background: linear-gradient(135deg, rgba(74, 85, 104, 0.6) 0%, rgba(107, 114, 128, 0.5) 100%);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3),
+                inset 0 1px 4px rgba(255, 255, 255, 0.2);
+}
+
+body.dark-mode .music-toggle-btn:hover {
+    background: linear-gradient(135deg, rgba(107, 114, 128, 0.8) 0%, rgba(130, 140, 160, 0.7) 100%);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4),
+                inset 0 1px 4px rgba(255, 255, 255, 0.3),
+                0 0 30px rgba(107, 114, 128, 0.3);
+}
+
+body.dark-mode .music-toggle-btn.playing {
+    background: linear-gradient(135deg, rgba(168, 85, 247, 0.6) 0%, rgba(196, 115, 255, 0.5) 100%);
+    box-shadow: 0 4px 15px rgba(168, 85, 247, 0.3),
+                inset 0 1px 4px rgba(255, 255, 255, 0.2),
+                0 0 20px rgba(168, 85, 247, 0.2);
+}
+
+body.dark-mode .music-toggle-btn.playing:hover {
+    box-shadow: 0 8px 25px rgba(168, 85, 247, 0.4),
+                inset 0 1px 4px rgba(255, 255, 255, 0.3),
+                0 0 30px rgba(168, 85, 247, 0.3);
+}
+
+body.dark-mode .music-toggle-btn.playing::after {
+    border-color: rgba(168, 85, 247, 0.5);
+}
+
+/* Responsive - Mobile */
+@media (max-width: 600px) {
+    .music-control-container {
+        padding: 0.8rem 0;
+    }
+    
+    .music-toggle-btn {
+        width: 54px;
+        height: 54px;
+        font-size: 24px;
+    }
+}
