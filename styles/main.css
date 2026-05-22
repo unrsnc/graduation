@@ -14,12 +14,18 @@ body.dark-mode {
 header {
     background: #b8e0ff;
     color: #2d3a4b;
-    padding: 1.2rem 0 1.5rem 0; /* padding atas lebih kecil, bawah lebih besar */
+    padding: 1.2rem 1.5rem 1.5rem 1.5rem; /* tambah padding horizontal */
     text-align: center;
     box-shadow: 0 4px 16px #e3f2fd;
     border-radius: 0 0 32px 32px; /* sudut bawah membulat */
     margin-bottom: 12px; /* tambahkan margin bawah agar tombol tidak terlalu menempel */
     position: relative;
+}
+
+header img:hover{
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px #b2f2bb;
+    transition: transform 0.70s, box-shadow 0.3s;
 }
 
 body.dark-mode header {
@@ -75,6 +81,10 @@ section#messages {
     box-shadow: 0 2px 8px #f8bbd0;
 }
 
+#messages{
+    font-family: cursive;
+}
+
 body.dark-mode section#messages {
     background: #3a3147;
     box-shadow: 0 2px 8px #6d4c8b;
@@ -112,6 +122,12 @@ section#gallery img {
     background: #fff;
 }
 
+section#gallery img:hover {
+    transform: scale(1.05);
+    box-shadow: 0 4px 16px #b2f2bb;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
 footer {
     background: #b8e0ff;
     color: #2d3a4b;
@@ -132,7 +148,7 @@ body.dark-mode footer {
 .marquee {
     width: 100%;
     overflow: hidden;
-    background: #ffe0f7;
+    background: #ecc0f8;
     color: #a64ca6;
     font-size: 1.3em;
     padding: 0.6em 0 0.6em 0; /* padding atas & bawah lebih soft */
@@ -238,41 +254,157 @@ body.dark-mode footer {
     padding: 4px; /* padding atas diperbesar */
 }
 
-#darkModeToggle {
-    z-index: 1002;
-    background: #fff;
-    color: #23272f;
-    border: none;
-    border-radius: 14px;
-    padding: 3px 10px;
-    font-size: 0.78em;
-    font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
-    cursor: pointer;
-    box-shadow: 0 2px 8px #b8e0ff;
-    transition: background 0.3s, color 0.3s;
-    letter-spacing: 0.5px;
-}
-
-body.dark-mode #darkModeToggle {
-    background: #23272f;
-    color: #fff;
-    box-shadow: 0 2px 8px #1118;
-}
-
-.button-group {
+/* Dark Mode Toggle Switch - Modern Premium iOS Style */
+.dark-mode-toggle-container {
+    position: absolute;
+    top: 1.2rem;
+    right: 1.5rem;
+    z-index: 100;
     display: flex;
-    flex-direction: column; /* ubah ke kolom */
-    justify-content: center;
     align-items: center;
-    gap: 12px; /* jarak antar tombol */
-    margin-bottom: 24px;
-    margin-top: 0;
-    position: static; /* pastikan tidak fixed/absolute */
+    justify-content: center;
 }
+
+.dark-mode-toggle-input {
+    display: none;
+}
+
+.dark-mode-toggle-switch {
+    position: relative;
+    display: inline-flex;
+    width: 52px;
+    height: 30px;
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 15px;
+    cursor: pointer;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(45, 58, 75, 0.15), inset 0 1px 3px rgba(255, 255, 255, 0.5);
+    align-items: center;
+    padding: 0 2px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+}
+
+.dark-mode-toggle-switch:hover {
+    background: rgba(255, 255, 255, 0.6);
+    box-shadow: 0 4px 12px rgba(45, 58, 75, 0.25), 
+                inset 0 1px 3px rgba(255, 255, 255, 0.7),
+                0 0 20px rgba(184, 224, 255, 0.4);
+    transform: scale(1.05);
+}
+
+.dark-mode-toggle-switch .toggle-inner {
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    background: #fff;
+    border-radius: 50%;
+    top: 3px;
+    left: 3px;
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1),
+                box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(45, 58, 75, 0.3);
+    z-index: 2;
+}
+
+.dark-mode-toggle-switch .toggle-icons {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1;
+    padding: 0 5px;
+}
+
+.toggle-icons .sun-icon,
+.toggle-icons .moon-icon {
+    font-size: 14px;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    filter: drop-shadow(0 1px 2px rgba(45, 58, 75, 0.2));
+}
+
+.toggle-icons .sun-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.toggle-icons .moon-icon {
+    opacity: 0.25;
+    transform: scale(0.85);
+}
+
+/* When toggle is checked (dark mode ON) */
+.dark-mode-toggle-input:checked + .dark-mode-toggle-switch {
+    background: rgba(74, 85, 104, 0.5);
+    box-shadow: 0 2px 8px rgba(35, 39, 47, 0.25), 
+                inset 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.dark-mode-toggle-input:checked + .dark-mode-toggle-switch:hover {
+    background: rgba(74, 85, 104, 0.7);
+    box-shadow: 0 4px 12px rgba(35, 39, 47, 0.35), 
+                inset 0 1px 3px rgba(0, 0, 0, 0.3),
+                0 0 20px rgba(74, 85, 104, 0.4);
+}
+
+.dark-mode-toggle-input:checked + .dark-mode-toggle-switch .toggle-inner {
+    transform: translateX(22px);
+    box-shadow: 0 2px 8px rgba(35, 39, 47, 0.4);
+}
+
+.dark-mode-toggle-input:checked + .dark-mode-toggle-switch .sun-icon {
+    opacity: 0.25;
+    transform: scale(0.85);
+}
+
+.dark-mode-toggle-input:checked + .dark-mode-toggle-switch .moon-icon {
+    opacity: 1;
+    transform: scale(1);
+}
+
+/* Reduce z-index when modal is open */
+.dark-mode-toggle-container.modal-open {
+    z-index: 50 !important;
+    pointer-events: none;
+}
+
+.dark-mode-toggle-container.modal-open .dark-mode-toggle-switch {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Dark mode header styling */
+body.dark-mode header {
+    padding: 1.2rem 1.5rem 1.5rem 1.5rem;
+}
+
+body.dark-mode .dark-mode-toggle-switch {
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 3px rgba(255, 255, 255, 0.15);
+}
+
+body.dark-mode .dark-mode-toggle-switch:hover {
+    background: rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35),
+                inset 0 1px 3px rgba(255, 255, 255, 0.2),
+                0 0 20px rgba(0, 0, 0, 0.3);
+}
+
+body.dark-mode .dark-mode-toggle-switch .toggle-inner {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.4);
+}
+
+
 
 .header-decor {
     position: absolute;
-    top: 120px;         /* tetap lebih ke bawah */
+    top: 140px;         /* tetap lebih ke bawah */
     font-size: 3.5em;  /* lebih besar dari sebelumnya */
     user-select: none;
     pointer-events: none;
@@ -281,12 +413,12 @@ body.dark-mode #darkModeToggle {
 }
 
 .header-decor.left {
-    left: 450px;        /* lebih ke dalam, mendekati foto profil */
+    left: 400px;        /* lebih ke dalam, mendekati foto profil */
     animation-delay: 0s;
 }
 
 .header-decor.right {
-    right: 450px;       /* lebih ke dalam, mendekati foto profil */
+    right: 400px;       /* lebih ke dalam, mendekati foto profil */
     animation-delay: 1.5s;
 }
 
@@ -295,26 +427,41 @@ body.dark-mode #darkModeToggle {
     100% { transform: translateY(-18px) scale(1.08);}
 }
 
-#playMusic {
-    background: #ffe0f7;
-    color: #a64ca6;
-    border: none;
-    border-radius: 14px;
-    padding: 4px 14px;
-    font-size: 0.85em;
-    font-family: 'Comic Sans MS', 'Comic Sans', cursive, sans-serif;
-    cursor: pointer;
-    box-shadow: 0 2px 8px #f8bbd0;
-    transition: background 0.3s, color 0.3s;
-    letter-spacing: 0.5px;
-}
-#playMusic:hover {
-    background: #f8bbd0;
-    color: #fff;
-}
+
 
 /* Responsive adjustments for mobile */
 @media (max-width: 600px) {
+    header {
+        padding: 1rem 1rem 1.5rem 1rem;
+    }
+    
+    .dark-mode-toggle-container {
+        top: 1rem;
+        right: 1rem;
+    }
+    
+    .dark-mode-toggle-switch {
+        width: 48px;
+        height: 28px;
+        border-radius: 14px;
+    }
+    
+    .dark-mode-toggle-switch .toggle-inner {
+        width: 22px;
+        height: 22px;
+        top: 3px;
+        left: 3px;
+    }
+    
+    .dark-mode-toggle-input:checked + .dark-mode-toggle-switch .toggle-inner {
+        transform: translateX(20px);
+    }
+    
+    .toggle-icons .sun-icon,
+    .toggle-icons .moon-icon {
+        font-size: 12px;
+    }
+    
     .header-decor.left {
         left: 24px;
         font-size: 2em;
@@ -323,16 +470,7 @@ body.dark-mode #darkModeToggle {
         right: 24px;
         font-size: 2em;
     }
-    .button-group {
-        width: 100%;
-        gap: 10px;
-    }
-    #darkModeToggle,
-    #playMusic {
-        width: 90%;
-        max-width: 340px;
-        font-size: 1em;
-    }
+
     .modal {
         padding-top: 20px;
     }
